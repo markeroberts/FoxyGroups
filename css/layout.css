@@ -56,6 +56,22 @@ html, body {
 	bottom: 0;
 	margin: 5px 5px 0;
 }
+.tab .favicon {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 30px;
+	height: 30px;
+	background: #E0EAF4;
+	border: 1px solid #d7d7d7;
+	border-style: none solid solid none;
+	border-radius: 0 0 5px 0;
+}
+.tab .favicon img {
+	width: 16px;
+	height: 16px;
+	margin: 7px 8px 7px 6px;
+}
 .tab .image {
 	height: calc(100% - 20px);
 	background: #fff;

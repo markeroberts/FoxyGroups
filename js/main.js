@@ -67,8 +67,7 @@ $tabgroups.on('click', '.tab', function() {
 	}
 });
 
-// Creates a new tab group from given tabs at position x,y
-// function buildTabGroup(tabs, x, y) {
+// Builds tab group into div
 function buildTabGroup(tabGroup) {
 	// Build each tab and add into .tabs div
 	var $tabs = $('<div>').addClass('tabs');
@@ -77,6 +76,9 @@ function buildTabGroup(tabGroup) {
 		$tabs.append($('<div>').addClass(tab.id === background.activeTabId ? 'tab active' : 'tab')
 				.attr('id', tab.id)
 				.append($('<div>').addClass('content')
+					.append($('<div>').addClass('favicon')
+						.append($('<img>').attr('src', tab.favicon))
+					)
 					.append($('<div>').addClass('image')
 						.append($('<img>').attr('src', tab.image))
 					)

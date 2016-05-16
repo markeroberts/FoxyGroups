@@ -11,6 +11,7 @@ chrome.tabs.query({}, function(tabs) {
 			id: tab.id,
 			title: tab.title,
 			url: tab.url,
+			favicon: tab.favIconUrl,
 			image: null
 		};
 	});
