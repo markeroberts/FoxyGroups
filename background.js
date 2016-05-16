@@ -87,10 +87,7 @@ function TabGroup() {
 		url: 'chrome://newtab/',
 		favicon: null
 	}];
-	this.images = [{
-		tabId: null,
-		url: null
-	}];
+	this.images = {};
 }
 
 // Find tab group by id
@@ -101,7 +98,7 @@ function getTabGroup(id) {
 }
 
 // Updates tabs in active tab group with currently open tabs
-function updateActiveTabGroup(callback) {
+function updateActiveTabGroup() {
 	// Get all open tabs
 	chrome.tabs.query({}, function(tabs) {
 		var activeTabGroup = getTabGroup(activeTabGroupId);
@@ -151,15 +148,12 @@ function captureActiveTab(callback) {
 					// Randomly fails to capture tab, try again
 					if(chrome.runtime.lastError || !dataUrl){
 						setTimeout(function() {
-							captureActiveTab(activeTabId);
+							captureActiveTab();
 						}, 100);
 					}
 					else {
-						// Find tab to save image to
-						// var tab = getTabGroup(activeTabGroupId).tabs.find(function(tab) {
-						// 	return tab.id === activeTabId;
-						// });
-						// tab.image = dataUrl;
+						// Save image to images object of tab group
+						getTabGroup(activeTabGroupId).images[activeTabId] = dataUrl;
 
 						if(callback) callback();
 					}

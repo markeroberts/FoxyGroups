@@ -95,7 +95,7 @@ function buildTabGroup(tabGroup) {
 						.append($('<img>').attr('src', tab.favicon))
 					)
 					.append($('<div>').addClass('image')
-						.append(tab.image ? $('<img>').attr('src', tab.image) : '')
+						.append(tabGroup.images[tab.id] ? $('<img>').attr('src', tabGroup.images[tab.id]) : '')
 					)
 					.append($('<div>').addClass('title').text(tab.title))
 				)
