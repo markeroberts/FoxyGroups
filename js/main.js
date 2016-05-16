@@ -73,6 +73,10 @@ function buildTabGroup(tabGroup) {
 	var $tabs = $('<div>').addClass('tabs');
 
 	tabGroup.tabs.forEach(function(tab) {
+		if(tab.favicon === 'chrome://theme/IDR_EXTENSIONS_FAVICON@2x') {
+			tab.favicon = 'img/IDR_EXTENSIONS_FAVICON@2x.png';
+		}
+
 		$tabs.append($('<div>').addClass(tab.id === background.activeTabId ? 'tab active' : 'tab')
 				.attr('id', tab.id)
 				.append($('<div>').addClass('content')
@@ -80,7 +84,7 @@ function buildTabGroup(tabGroup) {
 						.append($('<img>').attr('src', tab.favicon))
 					)
 					.append($('<div>').addClass('image')
-						.append($('<img>').attr('src', tab.image))
+						.append(tab.image ? $('<img>').attr('src', tab.image) : '')
 					)
 					.append($('<div>').addClass('title').text(tab.title))
 				)

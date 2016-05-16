@@ -86,6 +86,7 @@ function TabGroup() {
 		id: null,
 		title: 'New Tab',
 		url:'chrome://newtab/',
+		favicon: null,
 		image: null
 	}];
 }
