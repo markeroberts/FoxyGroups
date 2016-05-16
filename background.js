@@ -48,6 +48,10 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
 	}
 });
 chrome.tabs.onRemoved.addListener(function(tabId) {
+	// Clear extension page id if closed
+	if(tabId === extensionPageId) {
+		extensionPageId = null;
+	}
 	if(extensionPageId) {
 		updateActiveTabGroup();
 	}
@@ -144,7 +148,7 @@ function captureActiveTab(callback) {
 		// Check tab is still active
 		chrome.tabs.get(activeTabId, function(tab) {
 			if(tab.active) {
-				chrome.tabs.captureVisibleTab(null, {format: 'jpeg', 'quality': 1}, function(dataUrl) {
+				chrome.tabs.captureVisibleTab(tab.windowId, {format: 'jpeg', 'quality': 1}, function(dataUrl) {
 					// Randomly fails to capture tab, try again
 					if(chrome.runtime.lastError || !dataUrl){
 						setTimeout(function() {
