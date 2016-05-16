@@ -84,8 +84,9 @@ function buildTabGroup(tabGroup) {
 	var $tabs = $('<div>').addClass('tabs');
 
 	tabGroup.tabs.forEach(function(tab) {
-		if(tab.favicon === 'chrome://theme/IDR_EXTENSIONS_FAVICON@2x') {
-			tab.favicon = 'img/IDR_EXTENSIONS_FAVICON@2x.png';
+		// Replace chrome page favicons with local images
+		if(tab.favicon && tab.favicon.startsWith('chrome://theme/')) {
+			tab.favicon = tab.favicon.replace('chrome://theme/', 'img/') + '.png';
 		}
 
 		$tabs.append($('<div>').addClass(tab.id === background.activeTabId ? 'tab active' : 'tab')
