@@ -1,27 +1,15 @@
 var tabGroups = [],
-	activeTabGroup = null,
+	activeTabGroupId = null,
 	activeTabId = null,
 	extensionPageId = null,
 	activeListeners = true;
 
-// Create new tab group of open tabs when extension loaded
-chrome.tabs.query({}, function(tabs) {
-	var tabObjects = tabs.map(function(tab) {
-		return {
-			id: tab.id,
-			title: tab.title,
-			url: tab.url,
-			favicon: tab.favIconUrl,
-			image: null
-		};
-	});
-
-	var tabGroup = new TabGroup();
-	tabGroup.active = true;
-	tabGroup.tabs = tabObjects;
-	tabGroups.push(tabGroup);
-	activeTabGroup = tabGroup.id;
-});
+// Create new tab group
+var tabGroup = new TabGroup();
+tabGroup.active = true;
+tabGroups.push(tabGroup);
+activeTabGroupId = tabGroup.id;
+updateActiveTabGroup();
 
 // Extension button clicked
 chrome.browserAction.onClicked.addListener(function() {
@@ -53,6 +41,18 @@ chrome.browserAction.onClicked.addListener(function() {
 
 });
 
+// If extension page is open, update current tab group and tell page to redraw
+chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
+	if(extensionPageId) {
+		updateActiveTabGroup();
+	}
+});
+chrome.tabs.onRemoved.addListener(function(tabId) {
+	if(extensionPageId) {
+		updateActiveTabGroup();
+	}
+});
+
 // Get tab image when tab is made active or finished loading
 chrome.tabs.onActivated.addListener(function(activeInfo) {
 	if(activeListeners) captureActiveTab();
@@ -62,13 +62,12 @@ chrome.webNavigation.onCompleted.addListener(function(details) {
 });
 
 // Remove tab image when tab is closed
-chrome.tabs.onRemoved.addListener(function(tabId) {
-	if(tabId === extensionPageId) {
-		extensionPageId = null;
-	}
-	console.log(extensionPageId);
-	// delete tabImages[tabId];
-});
+// chrome.tabs.onRemoved.addListener(function(tabId) {
+// 	if(tabId === extensionPageId) {
+// 		extensionPageId = null;
+// 	}
+// 	// delete tabImages[tabId];
+// });
 
 function TabGroup() {
 	this.id = (new Date()).getTime();
@@ -85,43 +84,62 @@ function TabGroup() {
 	this.tabs = [{
 		id: null,
 		title: 'New Tab',
-		url:'chrome://newtab/',
-		favicon: null,
-		image: null
+		url: 'chrome://newtab/',
+		favicon: null
+	}];
+	this.images = [{
+		tabId: null,
+		url: null
 	}];
 }
 
-// function createTabGroup(tabs) {
-// 	var tabGroup = new TabGroup(tabs);
-// 	tabGroups.push(tabGroup);
-// 	return tabGroup;
-// }
-
+// Find tab group by id
 function getTabGroup(id) {
 	return tabGroups.find(function(tabGroup) {
 		return tabGroup.id === parseInt(id);
 	});
 }
 
+// Updates tabs in active tab group with currently open tabs
+function updateActiveTabGroup(callback) {
+	// Get all open tabs
+	chrome.tabs.query({}, function(tabs) {
+		var activeTabGroup = getTabGroup(activeTabGroupId);
+
+		// Put into array and ignore extension page
+		var tabObjects = [];
+		tabs.forEach(function(tab) {
+			if(tab.id !== extensionPageId) {
+				var tabObject = {
+					id: tab.id,
+					title: tab.title,
+					url: tab.url,
+					favicon: tab.favIconUrl
+				};
+				tabObjects.push(tabObject);
+			}
+		});
+		activeTabGroup.tabs = tabObjects;
+	});
+}
+
 function openTabGroup(tabGroupId) {
 	// Close all tabs except Tab Groups
 	// Get list of tabIds in current group to close
-	var tabIds = getTabGroup(activeTabGroup).tabs.map(function(tab) {
+	var tabIds = getTabGroup(activeTabGroupId).tabs.map(function(tab) {
 		return tab.id;
 	});
 
 	chrome.tabs.remove(tabIds, function() {
 		// Now open each tab in new tab group
-		console.log(getTabGroup(tabGroupId).tabs);
 		getTabGroup(tabGroupId).tabs.forEach(function(tab) {
-			console.log('CREATE: ' + tab.url);
 			chrome.tabs.create({url: tab.url});
 		});
-		activeTabGroup = tabGroupId;
+		activeTabGroupId = tabGroupId;
 	});
 }
 
-// Capture image of tab by given id and save to active tab group
+// Capture image of active tab and save to active tab group
 function captureActiveTab(callback) {
 	chrome.tabs.query({active: true}, function(tabs) {
 		activeTabId = tabs[0].id;
@@ -138,10 +156,10 @@ function captureActiveTab(callback) {
 					}
 					else {
 						// Find tab to save image to
-						var tab = getTabGroup(activeTabGroup).tabs.find(function(tab) {
-							return tab.id === activeTabId;
-						});
-						tab.image = dataUrl;
+						// var tab = getTabGroup(activeTabGroupId).tabs.find(function(tab) {
+						// 	return tab.id === activeTabId;
+						// });
+						// tab.image = dataUrl;
 
 						if(callback) callback();
 					}

@@ -4,13 +4,10 @@ var background = chrome.extension.getBackgroundPage(),
 
 // Build each tab group on page load
 $(document).ready(function() {
-	// console.log(background.tabGroups);
-
-	background.tabGroups.forEach(function(tabGroup) {
-		buildTabGroup(tabGroup);
-	});
+	redrawTabGroups();
 });
 
+// Create new empty tabgroup at double click location
 $tabgroups.dblclick(function(e) {
 	// Calculate new tab group position to avoid overlap with page boundary
 	var top = e.pageY,
@@ -66,6 +63,20 @@ $tabgroups.on('click', '.tab', function() {
 		background.openTabGroup(tabGroupId);
 	}
 });
+
+// Redraws all tab groups
+function redrawTabGroups() {
+	// Refresh active tab group with currently open tabs
+	// background.getOpenTabs(function(tabs) {
+	// 	background.getTabGroup(background.activeTabGroup).tabs = tabs;
+	// });
+
+	// Empty tabgroups div and rebuild
+	$tabgroups.empty();
+	background.tabGroups.forEach(function(tabGroup) {
+		buildTabGroup(tabGroup);
+	});
+}
 
 // Builds tab group into div
 function buildTabGroup(tabGroup) {
