@@ -89,6 +89,11 @@ function buildTabGroup(tabGroup) {
 			tab.favicon = tab.favicon.replace('chrome://theme/', 'img/') + '.png';
 		}
 
+		// Get image url for background-image if saved
+		var image = '';
+		if(tabGroup.images[tab.id]) {
+			image = 'url(' + tabGroup.images[tab.id] + ')';
+		}
 		$tabs.append($('<div>').addClass(tab.id === background.activeTabId ? 'tab active' : 'tab')
 				.attr('id', tab.id)
 				.append($('<div>').addClass('content')
@@ -96,7 +101,7 @@ function buildTabGroup(tabGroup) {
 						.append($('<img>').attr('src', tab.favicon))
 					)
 					.append($('<div>').addClass('image')
-						.append(tabGroup.images[tab.id] ? $('<img>').attr('src', tabGroup.images[tab.id]) : '')
+						.append($('<div>').css('background-image', image))
 					)
 					.append($('<div>').addClass('title').text(tab.title))
 				)
