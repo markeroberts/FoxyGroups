@@ -48,6 +48,10 @@ $tabgroups.on('sortstart', '.tabs', function(e, ui) {
 	ui.placeholder.width(ui.placeholder.siblings('.tab')[0].getBoundingClientRect().width);
 	ui.placeholder.height(ui.placeholder.siblings('.tab')[0].getBoundingClientRect().height);
 });
+$tabgroups.on('sortstop', '.tabs', function(e, ui) {
+	var width = ui.item[0].style.width;
+	ui.item.removeAttr('style').css('width', width);
+});
 
 // Switch to tab on click and close Tab Groups
 $tabgroups.on('click', '.tab', function() {
@@ -60,17 +64,12 @@ $tabgroups.on('click', '.tab', function() {
 		// });
 	}
 	else {
-		background.openTabGroup(tabGroupId);
+		// background.openTabGroup(tabGroupId);
 	}
 });
 
 // Redraws all tab groups
 function redrawTabGroups() {
-	// Refresh active tab group with currently open tabs
-	// background.getOpenTabs(function(tabs) {
-	// 	background.getTabGroup(background.activeTabGroup).tabs = tabs;
-	// });
-
 	// Empty tabgroups div and rebuild
 	$tabgroups.empty();
 	background.tabGroups.forEach(function(tabGroup) {
@@ -120,6 +119,7 @@ function buildTabGroup(tabGroup) {
 		.append('<div class="name">' + tabGroup.name + '</div>')
 		.append(
 			$tabs.sortable({
+				cursor: 'move',
 				connectWith: '.tabs',
 				handle: '.content',
 				placeholder: 'tab',
@@ -191,10 +191,5 @@ function sizeTabsInGroup($group) {
 		}
 	}
 
-	if(tabWidth) {
-		$tab.css('width', tabWidth);
-	}
-	else {
-		$tab.css('width', 100/tabsAcross + '%');
-	}
+	$tab.css('width', tabWidth ? tabWidth: 100/tabsAcross + '%');
 }
