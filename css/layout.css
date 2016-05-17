@@ -32,6 +32,7 @@ html, body {
 }
 
 .tabs {
+	position: relative;
 	padding: 5px;
 }
 
@@ -39,7 +40,7 @@ html, body {
 	position: relative;
 	display: inline-block;
 	width: 100%;
-	min-width: 60px;
+	min-width: 100px;
 	vertical-align: top;
 }
 .tab:before {
@@ -111,6 +112,15 @@ html, body {
 	height: calc(100% - 15px);
 	padding: 5px;
 	box-shadow: 0 0 8px 2px #3d9bda;
+}
+
+.tabs.collapse .tab {
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+.tabs.collapse .tab .title {
+	display: none;
 }
 
 .tab-placeholder {
