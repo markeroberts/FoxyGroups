@@ -13,6 +13,8 @@ updateActiveTabGroup();
 
 // Extension button clicked
 chrome.browserAction.onClicked.addListener(function() {
+	activeListeners = false;
+
 	// If extension page is already open
 	if(extensionPageId) {
 		chrome.tabs.get(extensionPageId, function(tab) {
@@ -24,13 +26,13 @@ chrome.browserAction.onClicked.addListener(function() {
 			else {
 				captureActiveTab(function() {
 					chrome.tabs.update(extensionPageId, {active: true});
+					activeListeners = true;
 				});
 			}
 		});
 	}
 	// Otherwise refresh current tab image and open extension page
 	else {
-		activeListeners = false;
 		captureActiveTab(function() {
 			chrome.tabs.create({'url': chrome.extension.getURL('foxygroups.html')}, function(tab) {
 				extensionPageId = tab.id;
@@ -59,7 +61,12 @@ chrome.tabs.onRemoved.addListener(function(tabId) {
 
 // Get tab image when tab is made active or finished loading
 chrome.tabs.onActivated.addListener(function(activeInfo) {
-	if(activeListeners) captureActiveTab();
+	if(activeListeners) {
+		if(activeInfo.tabId !== extensionPageId) {
+			activeTabId = activeInfo.tabId;
+		}
+		captureActiveTab();
+	}
 });
 chrome.webNavigation.onCompleted.addListener(function(details) {
 	if(activeListeners) captureActiveTab();
@@ -143,8 +150,6 @@ function openTabGroup(tabGroupId) {
 // Capture image of active tab and save to active tab group
 function captureActiveTab(callback) {
 	chrome.tabs.query({active: true}, function(tabs) {
-		activeTabId = tabs[0].id;
-
 		// Check tab is still active
 		chrome.tabs.get(activeTabId, function(tab) {
 			if(tab.active) {

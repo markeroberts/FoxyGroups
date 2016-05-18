@@ -1,5 +1,4 @@
 var background = chrome.extension.getBackgroundPage(),
-	tabImages = background.tabImages,
 	$tabgroups = $('#tabgroups');
 
 // Build each tab group on page load
@@ -26,7 +25,7 @@ $tabgroups.dblclick(function(e) {
 		left: left
 	};
 	background.tabGroups.push(tabGroup);
-	activeTabGroup = tabGroup.id;
+	background.activeTabGroupId = tabGroup.id;
 
 	buildTabGroup(tabGroup);
 });
@@ -48,20 +47,20 @@ $tabgroups.on('sortstart', '.tabs', function(e, ui) {
 	ui.placeholder.width(ui.placeholder.siblings('.tab')[0].getBoundingClientRect().width);
 	ui.placeholder.height(ui.placeholder.siblings('.tab')[0].getBoundingClientRect().height);
 });
+// Restore tab width after sorting and remove other inline styles
 $tabgroups.on('sortstop', '.tabs', function(e, ui) {
 	var width = ui.item[0].style.width;
 	ui.item.removeAttr('style').css('width', width);
 });
 
-// Switch to tab on click and close Tab Groups
+// Switch to tab on click and close extension page
 $tabgroups.on('click', '.tab', function() {
 	// Check if opening tab in current tab group
 	var tabGroupId = parseInt($(this).parents('.tabgroup').attr('id'));
-	if(tabGroupId === background.activeTabGroup) {
-		// chrome.tabs.update(parseInt($(this).attr('id')), {'active': true});
-		// chrome.tabs.getCurrent(function(tab) {
-		// 	chrome.tabs.remove(tab.id);
-		// });
+
+	if(tabGroupId === background.activeTabGroupId) {
+		chrome.tabs.update(parseInt($(this).attr('id')), {'active': true});
+		chrome.tabs.remove(background.extensionPageId);
 	}
 	else {
 		// background.openTabGroup(tabGroupId);
