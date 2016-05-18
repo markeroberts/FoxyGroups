@@ -67,6 +67,12 @@ $tabgroups.on('click', '.tab', function() {
 	}
 });
 
+chrome.runtime.onMessage.addListener(function(message) {
+	if(message === 'redrawTabGroups') {
+		redrawTabGroups();
+	}
+});
+
 // Redraws all tab groups
 function redrawTabGroups() {
 	// Empty tabgroups div and rebuild

@@ -11,6 +11,11 @@ tabGroups.push(tabGroup);
 activeTabGroupId = tabGroup.id;
 updateActiveTabGroup();
 
+// Set current tab as active
+chrome.tabs.query({active: true}, function(tabs) {
+	activeTabId = tabs[0].id;
+});
+
 // Extension button clicked
 chrome.browserAction.onClicked.addListener(function() {
 	activeListeners = false;
@@ -43,7 +48,22 @@ chrome.browserAction.onClicked.addListener(function() {
 
 });
 
-// If extension page is open, update current tab group and tell page to redraw
+// Get tab image when tab is made active or finished loading
+chrome.tabs.onActivated.addListener(function(activeInfo) {
+	if(activeListeners) {
+		if(activeInfo.tabId !== extensionPageId) {
+			activeTabId = activeInfo.tabId;
+		}
+		captureActiveTab();
+	}
+});
+chrome.webNavigation.onCompleted.addListener(function(details) {
+	if(activeListeners) {
+		captureActiveTab();
+	}
+});
+
+// If extension page is open and tabs are modified, update tab group and redraw
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
 	if(extensionPageId) {
 		updateActiveTabGroup();
@@ -58,18 +78,10 @@ chrome.tabs.onRemoved.addListener(function(tabId) {
 		updateActiveTabGroup();
 	}
 });
-
-// Get tab image when tab is made active or finished loading
-chrome.tabs.onActivated.addListener(function(activeInfo) {
-	if(activeListeners) {
-		if(activeInfo.tabId !== extensionPageId) {
-			activeTabId = activeInfo.tabId;
-		}
-		captureActiveTab();
+chrome.tabs.onMoved.addListener(function(tabId) {
+	if(extensionPageId && tabId !== extensionPageId) {
+		updateActiveTabGroup();
 	}
-});
-chrome.webNavigation.onCompleted.addListener(function(details) {
-	if(activeListeners) captureActiveTab();
 });
 
 // Remove tab image when tab is closed
@@ -128,6 +140,8 @@ function updateActiveTabGroup() {
 			}
 		});
 		activeTabGroup.tabs = tabObjects;
+
+		redrawTabGroups();
 	});
 }
 
@@ -149,25 +163,32 @@ function openTabGroup(tabGroupId) {
 
 // Capture image of active tab and save to active tab group
 function captureActiveTab(callback) {
-	chrome.tabs.query({active: true}, function(tabs) {
-		// Check tab is still active
-		chrome.tabs.get(activeTabId, function(tab) {
-			if(tab.active) {
-				chrome.tabs.captureVisibleTab(tab.windowId, {format: 'jpeg', 'quality': 1}, function(dataUrl) {
-					// Randomly fails to capture tab, try again
-					if(chrome.runtime.lastError || !dataUrl){
-						setTimeout(function() {
-							captureActiveTab();
-						}, 100);
-					}
-					else {
-						// Save image to images object of tab group
-						getTabGroup(activeTabGroupId).images[activeTabId] = dataUrl;
+	// Check tab is still active
+	chrome.tabs.get(activeTabId, function(tab) {
+		if(tab.active) {
+			chrome.tabs.captureVisibleTab(tab.windowId, {format: 'jpeg', 'quality': 1}, function(dataUrl) {
+				// Randomly fails to capture tab, try again
+				if(chrome.runtime.lastError || !dataUrl){
+					setTimeout(function() {
+						captureActiveTab();
+					}, 100);
+				}
+				else {
+					// Save image to images object of tab group
+					getTabGroup(activeTabGroupId).images[activeTabId] = dataUrl;
+					redrawTabGroups();
 
-						if(callback) callback();
-					}
-				});
-			}
-		});
+
+					if(callback) callback();
+				}
+			});
+		}
+		else {
+			if(callback) callback();
+		}
 	});
+}
+
+function redrawTabGroups() {
+	chrome.runtime.sendMessage(null, 'redrawTabGroups');
 }
