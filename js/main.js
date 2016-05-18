@@ -52,6 +52,13 @@ $tabgroups.on('sortstop', '.tabs', function(e, ui) {
 	var width = ui.item[0].style.width;
 	ui.item.removeAttr('style').css('width', width);
 });
+// Move tabs in group when sorted
+$tabgroups.on('sortupdate', '.tabs', function(e, ui) {
+	var tabGroupId = parseInt(ui.item.parents('.tabgroup').attr('id')),
+		tabId      = parseInt(ui.item.attr('id')),
+		tabIndex   = ui.item.index();
+	background.moveTab(tabGroupId, tabId, tabIndex);
+});
 
 // Switch to tab on click and close extension page
 $tabgroups.on('click', '.tab', function() {

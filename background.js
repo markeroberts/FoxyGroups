@@ -192,3 +192,9 @@ function captureActiveTab(callback) {
 function redrawTabGroups() {
 	chrome.runtime.sendMessage(null, 'redrawTabGroups');
 }
+
+function moveTab(tabGroupId, tabId, tabIndex) {
+	if(tabGroupId === activeTabGroupId) {
+		chrome.tabs.move(tabId, {index: tabIndex});
+	}
+}
