@@ -138,19 +138,15 @@ function buildTabGroup(tabGroup) {
 }
 
 function sizeTabsInGroup($group) {
-	var $tabs = $group.find('.tabs').removeClass('collapse'),
-		$tab  = $group.find('.tab'),
-		tabMinSize = 100;
-
-	var tabsBottom = $tabs.offset().top + $tabs.outerHeight(),
-		groupBottom = $group.offset().top + $group.outerHeight();
-
-	// Calculate how many tabs should fit in row
-	var tabsAcross = 1,
-		tabWidth = null;
+	var $tabs          = $group.find('.tabs').removeClass('collapse'),
+		$tab           = $group.find('.tab'),
+		groupBottom    = $group.offset().top + $group.outerHeight(),
+		tabMinSize     = 100,
+		tabsAcross     = 1,
+		tabWidth       = null,
+		fitsVertically = false;
 
 	// Check if this number allows vertical fit
-	var fitsVertically = false;
 	while(!fitsVertically) {
 		var numberOfRows = Math.ceil($tab.length / tabsAcross),
 			tabHeight = $tabs.width() / tabsAcross * 0.8,
@@ -163,7 +159,7 @@ function sizeTabsInGroup($group) {
 			}
 			// If it doesn't fit, check if one more tab would fit horizontally
 			else {
-				// Check if width divided by one more tab across is bigger than tabMinSize
+				// Ensure tabs wouldn't be less than minimum size
 				if($tabs.width() / (tabsAcross + 1) >= tabMinSize) {
 					tabsAcross += 1;
 				}
@@ -174,6 +170,7 @@ function sizeTabsInGroup($group) {
 			}
 		}
 		else {
+			// Calculate by pixel width instead of percentage
 			tabWidth = tabWidth || Math.floor($tabs.width() / tabsAcross);
 			tabsHeight = numberOfRows * tabWidth * 0.8 + 10;
 
@@ -181,15 +178,11 @@ function sizeTabsInGroup($group) {
 				fitsVertically = true;
 			}
 			else {
-				if(tabWidth - 1 >= tabMinSize) {
-					tabWidth -= 1;
-				}
-				else {
-					fitsVertically = true;
-				}
+				// Keep shrinking tabs until fit
+				tabWidth -= 1;
 			}
 		}
 	}
 
-	$tab.css('width', tabWidth ? tabWidth: 100/tabsAcross + '%');
+	$tab.css('width', tabWidth ? tabWidth : 100/tabsAcross + '%');
 }
