@@ -30,8 +30,46 @@ html, body {
 	cursor: move;
 }
 .tabgroup .name {
-	padding: 5px;
-	color: #999;
+	height: 26px;
+	padding: 5px 5px 0;
+	color: #aaa;
+}
+.tabgroup .name .fa-pencil {
+	margin-left: 3px;
+	font-size: 16px;
+	line-height: 21px;
+}
+.tabgroup .name input {
+	display: none;
+	padding: 2px;
+	width: 100%;
+	color: #444;
+	background: transparent;
+	border: 1px solid #ccc;
+	outline: none;
+}
+.tabgroup .name input::-webkit-input-placeholder {
+	font-style: italic;
+}
+.tabgroup .name:hover .fa-pencil {
+	display: none;
+}
+.tabgroup .name:hover input {
+	display: block;
+}
+.tabgroup .name.has-name .fa-pencil {
+	display: none;
+}
+.tabgroup .name.has-name input {
+	display: block;
+	color: #aaa;
+	border-color: transparent;
+}
+.tabgroup .name.has-name input:hover {
+	border-color: #ccc;
+}
+.tabgroup .name.has-name input:focus {
+	color: #444;
 }
 
 .tabs {

@@ -74,6 +74,34 @@ $tabgroups.on('click', '.tab', function() {
 	}
 });
 
+// Rename tabgroups
+$tabgroups.on({
+	change: function() {
+		var $this = $(this),
+			name = $this.val();
+
+		if(name !== '') {
+			$this.parent().addClass('has-name');
+		}
+		else {
+			$this.parent().removeClass('has-name');
+		}
+
+		var tabGroupId = parseInt($(this).parents('.tabgroup').attr('id'));
+		background.renameTabGroup(tabGroupId, name);
+	},
+	// Select all text on click
+	click: function() {
+		$(this).select();
+	},
+	// Unfocus on enter
+	keydown: function(e) {
+		if(e.which == 13) {
+			$(this).blur();
+		}
+	}
+}, '.name input');
+
 chrome.runtime.onMessage.addListener(function(message) {
 	if(message === 'redrawTabGroups') {
 		redrawTabGroups();
@@ -128,7 +156,16 @@ function buildTabGroup(tabGroup) {
 		.attr('id', tabGroup.id)
 		.css('top', tabGroup.position.top).css('left', tabGroup.position.left)
 		.css('width', tabGroup.size.width).css('height', tabGroup.size.height)
-		.append('<div class="name">' + tabGroup.name + '</div>')
+		.append($('<div>').addClass(tabGroup.name ? 'name has-name' : 'name')
+			.append('<i class="fa fa-pencil" aria-hidden="true"></i>')
+			.append(
+				$('<input>')
+					.attr('type', 'text')
+					.attr('placeholder', 'Name this tab group')
+					.attr('value', tabGroup.name ? tabGroup.name : '')
+					// type="text" placeholder="Name this tab group">')
+			)
+		)
 		.append(
 			$tabs.sortable({
 				cursor: 'move',

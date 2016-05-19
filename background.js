@@ -193,6 +193,10 @@ function redrawTabGroups() {
 	chrome.runtime.sendMessage(null, 'redrawTabGroups');
 }
 
+function renameTabGroup(tabGroupId, name) {
+	getTabGroup(tabGroupId).name = name;
+}
+
 function moveTab(tabGroupId, tabId, tabIndex) {
 	if(tabGroupId === activeTabGroupId) {
 		chrome.tabs.move(tabId, {index: tabIndex});
