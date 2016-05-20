@@ -19,11 +19,12 @@ html, body {
 .close:hover {
 	color: #fff;
 	background: #d93616;
+	text-shadow: 0px 1px 0px #AF402C;
 }
 .close span {
 	position: relative;
 	top: -5px;
-	font-size: 18px;
+	font-size: 19px;
 	font-weight: bold;
 }
 
