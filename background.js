@@ -24,7 +24,9 @@ chrome.browserAction.onClicked.addListener(function() {
 		chrome.tabs.get(extensionPageId, function(tab) {
 			// Close extension page if also active
 			if(tab.active) {
-				chrome.tabs.remove(extensionPageId);
+				chrome.tabs.remove(extensionPageId, function() {
+					extensionPageId = null;
+				});
 			}
 			// Otherwise refresh current tab image and switch to page
 			else {
