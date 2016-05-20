@@ -4,9 +4,8 @@ var tabGroups = [],
 	extensionPageId = null,
 	activeListeners = true;
 
-// Create new tab group
+// Create new tab group with currently open tabs
 var tabGroup = new TabGroup();
-tabGroup.active = true;
 tabGroups.push(tabGroup);
 activeTabGroupId = tabGroup.id;
 updateActiveTabGroup();
@@ -45,7 +44,6 @@ chrome.browserAction.onClicked.addListener(function() {
 			});
 		});
 	}
-
 });
 
 // Get tab image when tab is made active or finished loading
@@ -65,21 +63,23 @@ chrome.webNavigation.onCompleted.addListener(function(details) {
 
 // If extension page is open and tabs are modified, update tab group and redraw
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
-	if(extensionPageId) {
+	if(activeListeners && extensionPageId) {
 		updateActiveTabGroup();
 	}
 });
 chrome.tabs.onRemoved.addListener(function(tabId) {
-	// Clear extension page id if closed
-	if(tabId === extensionPageId) {
-		extensionPageId = null;
-	}
-	if(extensionPageId) {
-		updateActiveTabGroup();
+	if(activeListeners) {
+		// Clear extension page id if closed
+		if(tabId === extensionPageId) {
+			extensionPageId = null;
+		}
+		if(extensionPageId) {
+			updateActiveTabGroup();
+		}
 	}
 });
 chrome.tabs.onMoved.addListener(function(tabId) {
-	if(extensionPageId && tabId !== extensionPageId) {
+	if(activeListeners && extensionPageId && tabId !== extensionPageId) {
 		updateActiveTabGroup();
 	}
 });
@@ -95,7 +95,6 @@ chrome.tabs.onMoved.addListener(function(tabId) {
 function TabGroup() {
 	this.id = (new Date()).getTime();
 	this.name = '';
-	this.active = false;
 	this.position = {
 		top: 10,
 		left: 10
@@ -145,27 +144,56 @@ function updateActiveTabGroup() {
 	});
 }
 
-function openTabGroup(tabGroupId) {
-	// Close all tabs except Tab Groups
-	// Get list of tabIds in current group to close
-	var tabIds = getTabGroup(activeTabGroupId).tabs.map(function(tab) {
-		return tab.id;
+// Opens tab in given tab group
+function openTabGroup(tabGroupToOpen, activeIndex) {
+	activeListeners = false;
+
+	// Close all current tabs except extension page
+	chrome.tabs.query({}, function(tabs) {
+		var tabIdsToClose = [];
+		tabs.forEach(function(tab) {
+			if(tab.id !== extensionPageId) {
+				tabIdsToClose.push(tab.id);
+			}
+		});
+
+		chrome.tabs.remove(tabIdsToClose, function() {
+			// Clear activeTabId
+			activeTabId = null;
+
+			// Now open each tab in new tab group
+			var newTabs = getTabGroup(tabGroupToOpen).tabs,
+				makeActive = false;
+
+			newTabs.forEach(function(tab, i) {
+				if(i === activeIndex) {
+					makeActive = true;
+					// activeTabId = tab.id;
+				}
+
+				chrome.tabs.create({url: tab.url, active: makeActive}, function(tab) {
+					if(makeActive) {
+						activeTabId = tab.id;
+					}
+
+					// After last tab is opened
+					if(i + 1 === newTabs.length) {
+						chrome.tabs.remove(extensionPageId);
+						activeTabGroupId = tabGroupToOpen;
+						activeListeners = true;
+					}
+				});
+			});
+		});
 	});
 
-	chrome.tabs.remove(tabIds, function() {
-		// Now open each tab in new tab group
-		getTabGroup(tabGroupId).tabs.forEach(function(tab) {
-			chrome.tabs.create({url: tab.url});
-		});
-		activeTabGroupId = tabGroupId;
-	});
 }
 
 // Capture image of active tab and save to active tab group
 function captureActiveTab(callback) {
 	// Check tab is still active
 	chrome.tabs.get(activeTabId, function(tab) {
-		if(tab.active) {
+		if(tab && tab.active) {
 			chrome.tabs.captureVisibleTab(tab.windowId, {format: 'jpeg', 'quality': 1}, function(dataUrl) {
 				// Randomly fails to capture tab, try again
 				if(chrome.runtime.lastError || !dataUrl){

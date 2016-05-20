@@ -18,16 +18,42 @@ $tabgroups.dblclick(function(e) {
 	if(left < 10) left = 10;
 	else if(left + 210 > windowWidth) left = windowWidth - 210;
 
+	// Create new tab group and redraw
 	var tabGroup = new background.TabGroup();
-	tabGroup.active = true;
 	tabGroup.position = {
 		top: top,
 		left: left
 	};
 	background.tabGroups.push(tabGroup);
-	background.activeTabGroupId = tabGroup.id;
+	redrawTabGroups();
 
-	buildTabGroup(tabGroup);
+	// Set tab in new group to active
+	$('.tab.active').removeClass('active');
+	$('#' + tabGroup.id + ' .tab').addClass('active');
+
+	// Switch to new tab group
+	background.openTabGroup(tabGroup.id);
+});
+
+// Switch to tab on click
+$tabgroups.on('click', '.tab', function() {
+	var $this      = $(this),
+		tabId      = parseInt($this.attr('id')),
+		tabGroupId = parseInt($this.parents('.tabgroup').attr('id'));
+
+	// Set clicked tab to active
+	$('.tab.active').removeClass('active');
+	$this.addClass('active');
+
+	// If tab has id and is in current group, switch to it and close extension page
+	if(tabId && tabGroupId === background.activeTabGroupId) {
+		chrome.tabs.update(tabId, {'active': true});
+		close();
+	}
+	// Otherwise switch to group and activate tab by index as it might not have an id
+	else {
+		background.openTabGroup(tabGroupId, $this.index());
+	}
 });
 
 $tabgroups.on('resize', '.tabgroup', function(e, ui) {
@@ -60,21 +86,7 @@ $tabgroups.on('sortupdate', '.tabs', function(e, ui) {
 	background.moveTab(tabGroupId, tabId, tabIndex);
 });
 
-// Switch to tab on click and close extension page
-$tabgroups.on('click', '.tab', function() {
-	// Check if opening tab in current tab group
-	var tabGroupId = parseInt($(this).parents('.tabgroup').attr('id'));
-
-	if(tabGroupId === background.activeTabGroupId) {
-		chrome.tabs.update(parseInt($(this).attr('id')), {'active': true});
-		chrome.tabs.remove(background.extensionPageId);
-	}
-	else {
-		// background.openTabGroup(tabGroupId);
-	}
-});
-
-// Rename tabgroups
+// Rename tab groups
 $tabgroups.on({
 	change: function() {
 		var $this = $(this),
@@ -102,6 +114,7 @@ $tabgroups.on({
 	}
 }, '.name input');
 
+// Redraws tab on message from background page
 chrome.runtime.onMessage.addListener(function(message) {
 	if(message === 'redrawTabGroups') {
 		redrawTabGroups();
