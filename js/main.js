@@ -148,6 +148,7 @@ function buildTabGroup(tabGroup) {
 		}
 		$tabs.append($('<div>').addClass(tab.id === background.activeTabId ? 'tab active' : 'tab')
 				.attr('id', tab.id)
+				.attr('title', tab.title + '\x0A' + tab.url)
 				.append($('<div>').addClass('content')
 					.append($('<div>').addClass('favicon')
 						.append($('<img>').attr('src', tab.favicon))
@@ -156,10 +157,6 @@ function buildTabGroup(tabGroup) {
 						.append($('<div>').css('background-image', image))
 					)
 					.append($('<div>').addClass('title').text(tab.title))
-				)
-				.append($('<div>').addClass('tooltip')
-					.append($('<span>').text(tab.title))
-					.append($('<span>').text(tab.url))
 				)
 		);
 	});

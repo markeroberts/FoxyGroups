@@ -166,9 +166,6 @@ html, body {
 	white-space: nowrap;
 	text-overflow: ellipsis;
 }
-.tab .tooltip {
-	display: none;
-}
 
 .tab.active .image {
 	position: relative;
