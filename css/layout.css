@@ -9,6 +9,24 @@ html, body {
 	overflow: hidden;
 }
 
+.close {
+	display: inline-block;
+	width: 12px;
+	height: 12px;
+	text-align: center;
+	border-radius: 2px;
+}
+.close:hover {
+	color: #fff;
+	background: #d93616;
+}
+.close span {
+	position: relative;
+	top: -5px;
+	font-size: 18px;
+	font-weight: bold;
+}
+
 #tabgroups {
 	width: 100%;
 	height: 100%;
@@ -30,8 +48,10 @@ html, body {
 	cursor: move;
 }
 .tabgroup .name {
+	display: inline-block;
+	width: calc(100% - 26px);
 	height: 26px;
-	padding: 5px 5px 0;
+	padding: 5px 0 0 5px;
 	color: #aaa;
 }
 .tabgroup .name .fa-pencil {
@@ -47,6 +67,7 @@ html, body {
 	background: transparent;
 	border: 1px solid #ccc;
 	outline: none;
+	text-overflow: ellipsis;
 }
 .tabgroup .name input::-webkit-input-placeholder {
 	font-style: italic;
@@ -70,6 +91,10 @@ html, body {
 }
 .tabgroup .name.has-name input:focus {
 	color: #444;
+}
+.tabgroup .close {
+	margin: 10px 7px 0;
+	vertical-align: top;
 }
 
 .tabs {

@@ -170,14 +170,17 @@ function buildTabGroup(tabGroup) {
 		.css('top', tabGroup.position.top).css('left', tabGroup.position.left)
 		.css('width', tabGroup.size.width).css('height', tabGroup.size.height)
 		.append($('<div>').addClass(tabGroup.name ? 'name has-name' : 'name')
+			.attr('title', 'Name this tab group')
 			.append('<i class="fa fa-pencil" aria-hidden="true"></i>')
 			.append(
 				$('<input>')
 					.attr('type', 'text')
 					.attr('placeholder', 'Name this tab group')
 					.attr('value', tabGroup.name ? tabGroup.name : '')
-					// type="text" placeholder="Name this tab group">')
 			)
+		)
+		.append(
+			$('<div class="close" title="Close group"><span>&times;</span></div>')
 		)
 		.append(
 			$tabs.sortable({
