@@ -1,229 +1,185 @@
 * {
-	box-sizing: border-box;
-}
+  box-sizing: border-box; }
 
 html, body {
-	margin: 0;
-	width: 100%;
-	height: 100%;
-	overflow: hidden;
-}
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden; }
 
 .close {
-	display: inline-block;
-	width: 12px;
-	height: 12px;
-	text-align: center;
-	border-radius: 2px;
-}
-.close:hover {
-	color: #fff;
-	background: #d93616;
-	text-shadow: 0px 1px 0px #AF402C;
-}
-.close span {
-	position: relative;
-	top: -5px;
-	font-size: 19px;
-	font-weight: bold;
-}
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  text-align: center;
+  border-radius: 2px; }
+  .close:hover {
+    color: #fff;
+    background: #d93616;
+    text-shadow: 0px 1px 0px #AF402C; }
+  .close span {
+    position: relative;
+    top: -5px;
+    font-size: 19px;
+    font-weight: bold; }
 
 #tabgroups {
-	width: 100%;
-	height: 100%;
-	padding: 10px;
-	background: linear-gradient(to bottom, #cee7ff 0%, #bddefd 100%);
-}
+  width: 100%;
+  height: 100%;
+  padding: 10px;
+  background: linear-gradient(to bottom, #cee7ff 0%, #bddefd 100%); }
 
 .tabgroup {
-	position: absolute;
-	min-width: 125px;
-	min-height: 100px;
-	border: 1px solid #000;
-	border-radius: 5px;
-	background: #e0eaf4;
-	box-shadow: 2px 2px 10px #444;
-	cursor: pointer;
-}
-.tabgroup.ui-draggable-dragging {
-	cursor: move;
-}
-.tabgroup .name {
-	display: inline-block;
-	width: calc(100% - 26px);
-	height: 26px;
-	padding: 5px 0 0 5px;
-	color: #aaa;
-}
-.tabgroup .name .fa-pencil {
-	margin-left: 3px;
-	font-size: 16px;
-	line-height: 21px;
-}
-.tabgroup .name input {
-	display: none;
-	padding: 2px;
-	width: 100%;
-	color: #444;
-	background: transparent;
-	border: 1px solid #ccc;
-	outline: none;
-	text-overflow: ellipsis;
-}
-.tabgroup .name input::-webkit-input-placeholder {
-	font-style: italic;
-}
-.tabgroup .name:hover .fa-pencil {
-	display: none;
-}
-.tabgroup .name:hover input {
-	display: block;
-}
-.tabgroup .name.has-name .fa-pencil {
-	display: none;
-}
-.tabgroup .name.has-name input {
-	display: block;
-	color: #aaa;
-	border-color: transparent;
-}
-.tabgroup .name.has-name input:hover {
-	border-color: #ccc;
-}
-.tabgroup .name.has-name input:focus {
-	color: #444;
-}
-.tabgroup .close {
-	margin: 10px 7px 0;
-	vertical-align: top;
-}
+  position: absolute;
+  min-width: 125px;
+  min-height: 100px;
+  border: 1px solid #000;
+  border-radius: 5px;
+  background: #e0eaf4;
+  box-shadow: 2px 2px 10px #444;
+  cursor: pointer; }
+  .tabgroup.ui-draggable-dragging {
+    cursor: move; }
+  .tabgroup .name {
+    display: inline-block;
+    width: calc(100% - 26px);
+    height: 26px;
+    padding: 5px 0 0 5px;
+    color: #aaa; }
+    .tabgroup .name .fa-pencil {
+      margin-left: 3px;
+      font-size: 16px;
+      line-height: 21px; }
+    .tabgroup .name input {
+      display: none;
+      padding: 2px;
+      width: 100%;
+      color: #444;
+      background: transparent;
+      border: 1px solid #ccc;
+      outline: none;
+      text-overflow: ellipsis; }
+      .tabgroup .name input::-webkit-input-placeholder {
+        font-style: italic; }
+    .tabgroup .name:hover .fa-pencil {
+      display: none; }
+    .tabgroup .name:hover input {
+      display: block; }
+    .tabgroup .name.has-name .fa-pencil {
+      display: none; }
+    .tabgroup .name.has-name input {
+      display: block;
+      color: #aaa;
+      border-color: transparent; }
+      .tabgroup .name.has-name input:hover {
+        border-color: #ccc; }
+      .tabgroup .name.has-name input:focus {
+        color: #444; }
+  .tabgroup .close {
+    margin: 10px 7px 0;
+    vertical-align: top; }
+  .tabgroup .tabs {
+    position: relative;
+    height: 100%;
+    padding: 5px; }
 
-.tabs {
-	position: relative;
-	height: 100%;
-	padding: 5px;
-}
+.tabgroup.deleted .tabs {
+  display: none; }
 
 .tab {
-	position: relative;
-	display: inline-block;
-	width: 100%;
-	min-width: 100px;
-	vertical-align: top;
-}
-.tab:before {
-	content: "";
-	display: block;
-	padding-top: 80%;
-}
-
-.tab .content {
-	position: absolute;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	margin: 7px;
-}
-.tab .favicon {
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 30px;
-	height: 30px;
-	background: #e0eaf4;
-	border: 1px solid #d7d7d7;
-	border-style: none solid solid none;
-	border-radius: 0 0 5px 0;
-	z-index: 1;
-}
-.tab .favicon img {
-	width: 16px;
-	height: 16px;
-	margin: 7px 8px 7px 6px;
-}
-.tab .image {
-	height: calc(100% - 25px);
-	background: #e0eaf4;
-	border-radius: 5px;
-}
-.tab .image div {
-	width: 100%;
-	height: 100%;
-	background: #fff;
-	background-size: cover;
-	border: 1px solid #d7d7d7;
-}
-.tab .title {
-	position: absolute;
-	bottom: 0;
-	width: 100%;
-	height: 20px;
-	line-height: 20px;
-	color: #444;
-	text-align: center;
-	overflow: hidden;
-	white-space: nowrap;
-	text-overflow: ellipsis;
-}
-
-.tab.active .image {
-	position: relative;
-	top: -5px;
-	left: -5px;
-	width: calc(100% + 10px);
-	height: calc(100% - 15px);
-	padding: 5px;
-	box-shadow: 0 0 8px 2px #3d9bda;
-}
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  min-width: 100px;
+  vertical-align: top; }
+  .tab:before {
+    content: "";
+    display: block;
+    padding-top: 80%; }
+  .tab .content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: 7px; }
+  .tab .favicon {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 30px;
+    height: 30px;
+    background: #e0eaf4;
+    border: 1px solid #d7d7d7;
+    border-style: none solid solid none;
+    border-radius: 0 0 5px 0;
+    z-index: 1; }
+    .tab .favicon img {
+      width: 16px;
+      height: 16px;
+      margin: 7px 8px 7px 6px; }
+  .tab .image {
+    height: calc(100% - 25px);
+    background: #e0eaf4;
+    border-radius: 5px; }
+    .tab .image div {
+      width: 100%;
+      height: 100%;
+      background: #fff;
+      background-size: cover;
+      border: 1px solid #d7d7d7; }
+  .tab .title {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 20px;
+    line-height: 20px;
+    color: #444;
+    text-align: center;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis; }
+  .tab.active .image {
+    position: relative;
+    top: -5px;
+    left: -5px;
+    width: calc(100% + 10px);
+    height: calc(100% - 15px);
+    padding: 5px;
+    box-shadow: 0 0 8px 2px #3d9bda; }
 
 .tabs.collapse .tab {
-	position: absolute;
-	top: 20px;
-	left: 20px;
-	width: 70% !important;
-	height: 70% !important;
-	max-width: 200px;
-	max-height: 160px;
-}
-.tabs.collapse .tab:nth-of-type(1) {
-	z-index: 6;
-}
-.tabs.collapse .tab:nth-of-type(2) {
-	z-index: 5;
-}
-.tabs.collapse .tab:nth-of-type(3) {
-	transform: rotate(4deg);
-	z-index: 4;
-}
-.tabs.collapse .tab:nth-of-type(4) {
-	transform: rotate(8deg);
-	z-index: 3;
-}
-.tabs.collapse .tab:nth-of-type(5) {
-	transform: rotate(12deg);
-	z-index: 2;
-}
-.tabs.collapse .tab:nth-of-type(6) {
-	transform: rotate(16deg);
-	z-index: 1;
-}
-.tabs.collapse .tab:nth-of-type(7) {
-	transform: rotate(20deg);
-}
-.tabs.collapse .tab.active {
-	transform: none;
-	z-index: 7;
-}
-.tabs.collapse .tab .favicon {
-	border-style: solid;
-}
-.tabs.collapse .tab .title {
-	display: none;
-}
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  width: 70% !important;
+  height: 70% !important;
+  max-width: 200px;
+  max-height: 160px; }
+  .tabs.collapse .tab:nth-of-type(1) {
+    z-index: 6; }
+  .tabs.collapse .tab:nth-of-type(2) {
+    z-index: 5; }
+  .tabs.collapse .tab:nth-of-type(3) {
+    transform: rotate(4deg);
+    z-index: 4; }
+  .tabs.collapse .tab:nth-of-type(4) {
+    transform: rotate(8deg);
+    z-index: 3; }
+  .tabs.collapse .tab:nth-of-type(5) {
+    transform: rotate(12deg);
+    z-index: 2; }
+  .tabs.collapse .tab:nth-of-type(6) {
+    transform: rotate(16deg);
+    z-index: 1; }
+  .tabs.collapse .tab:nth-of-type(7) {
+    transform: rotate(20deg); }
+  .tabs.collapse .tab.active {
+    transform: none;
+    z-index: 7; }
+  .tabs.collapse .tab .favicon {
+    border-style: solid; }
+  .tabs.collapse .tab .title {
+    display: none; }
 
-.tab-placeholder {
-	display: inline-block;
-	background: #f00;
-	vertical-align: top;
-}
+/*# sourceMappingURL=layout.css.map */

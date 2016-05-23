@@ -1,0 +1,24 @@
+{
+  "name": "foxygroups",
+  "version": "1.0.0",
+  "description": "Chrome extension for Firefox-like Tab Groups",
+  "main": "background.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/markeroberts/FoxyGroups.git"
+  },
+  "author": "Mark Roberts",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/markeroberts/FoxyGroups/issues"
+  },
+  "homepage": "https://github.com/markeroberts/FoxyGroups#readme",
+  "devDependencies": {
+    "gulp": "github:gulpjs/gulp#4.0",
+    "gulp-sass": "^2.3.1",
+    "gulp-sourcemaps": "^1.6.0"
+  }
+}

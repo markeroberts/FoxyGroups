@@ -1,0 +1,258 @@
+* {
+	box-sizing: border-box;
+}
+
+html, body {
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+}
+
+.close {
+	display: inline-block;
+	width: 12px;
+	height: 12px;
+	text-align: center;
+	border-radius: 2px;
+
+	&:hover {
+		color: #fff;
+		background: #d93616;
+		text-shadow: 0px 1px 0px #AF402C;
+	}
+
+	span {
+		position: relative;
+		top: -5px;
+		font-size: 19px;
+		font-weight: bold;
+	}
+}
+
+#tabgroups {
+	width: 100%;
+	height: 100%;
+	padding: 10px;
+	background: linear-gradient(to bottom, #cee7ff 0%, #bddefd 100%);
+}
+
+.tabgroup {
+	position: absolute;
+	min-width: 125px;
+	min-height: 100px;
+	border: 1px solid #000;
+	border-radius: 5px;
+	background: #e0eaf4;
+	box-shadow: 2px 2px 10px #444;
+	cursor: pointer;
+
+	&.ui-draggable-dragging {
+		cursor: move;
+	}
+
+	.name {
+		display: inline-block;
+		width: calc(100% - 26px);
+		height: 26px;
+		padding: 5px 0 0 5px;
+		color: #aaa;
+
+		.fa-pencil {
+			margin-left: 3px;
+			font-size: 16px;
+			line-height: 21px;
+		}
+
+		input {
+			display: none;
+			padding: 2px;
+			width: 100%;
+			color: #444;
+			background: transparent;
+			border: 1px solid #ccc;
+			outline: none;
+			text-overflow: ellipsis;
+
+			&::-webkit-input-placeholder {
+				font-style: italic;
+			}
+		}
+
+		&:hover {
+			.fa-pencil {
+				display: none;
+			}
+
+			input {
+				display: block;
+			}
+		}
+
+		&.has-name {
+			.fa-pencil {
+				display: none;
+			}
+
+			input {
+				display: block;
+				color: #aaa;
+				border-color: transparent;
+
+				&:hover {
+					border-color: #ccc;
+				}
+
+				&:focus {
+					color: #444;
+				}
+			}
+		}
+	}
+
+	.close {
+		margin: 10px 7px 0;
+		vertical-align: top;
+	}
+
+	.tabs {
+		position: relative;
+		height: 100%;
+		padding: 5px;
+	}
+}
+
+.tabgroup.deleted {
+
+}
+.tabgroup.deleted .tabs {
+	display: none;
+}
+
+.tab {
+	position: relative;
+	display: inline-block;
+	width: 100%;
+	min-width: 100px;
+	vertical-align: top;
+
+	&:before {
+		content: "";
+		display: block;
+		padding-top: 80%;
+	}
+
+	.content {
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		margin: 7px;
+	}
+
+	.favicon {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 30px;
+		height: 30px;
+		background: #e0eaf4;
+		border: 1px solid #d7d7d7;
+		border-style: none solid solid none;
+		border-radius: 0 0 5px 0;
+		z-index: 1;
+
+		img {
+			width: 16px;
+			height: 16px;
+			margin: 7px 8px 7px 6px;
+		}
+	}
+
+	.image {
+		height: calc(100% - 25px);
+		background: #e0eaf4;
+		border-radius: 5px;
+
+		div {
+			width: 100%;
+			height: 100%;
+			background: #fff;
+			background-size: cover;
+			border: 1px solid #d7d7d7;
+		}
+	}
+
+	.title {
+		position: absolute;
+		bottom: 0;
+		width: 100%;
+		height: 20px;
+		line-height: 20px;
+		color: #444;
+		text-align: center;
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+	}
+
+	&.active .image {
+		position: relative;
+		top: -5px;
+		left: -5px;
+		width: calc(100% + 10px);
+		height: calc(100% - 15px);
+		padding: 5px;
+		box-shadow: 0 0 8px 2px #3d9bda;
+	}
+}
+
+.tabs.collapse .tab {
+	position: absolute;
+	top: 20px;
+	left: 20px;
+	width: 70% !important;
+	height: 70% !important;
+	max-width: 200px;
+	max-height: 160px;
+
+	&:nth-of-type(1) {
+		z-index: 6;
+	}
+	&:nth-of-type(2) {
+		z-index: 5;
+	}
+	&:nth-of-type(3) {
+		transform: rotate(4deg);
+		z-index: 4;
+	}
+	&:nth-of-type(4) {
+		transform: rotate(8deg);
+		z-index: 3;
+	}
+	&:nth-of-type(5) {
+		transform: rotate(12deg);
+		z-index: 2;
+	}
+	&:nth-of-type(6) {
+		transform: rotate(16deg);
+		z-index: 1;
+	}
+	&:nth-of-type(7) {
+		transform: rotate(20deg);
+	}
+
+	&.active {
+		transform: none;
+		z-index: 7;
+	}
+
+	.favicon {
+		border-style: solid;
+	}
+
+	.title {
+		display: none;
+	}
+}
