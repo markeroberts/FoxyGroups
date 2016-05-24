@@ -1,5 +1,6 @@
 * {
-  box-sizing: border-box; }
+  box-sizing: border-box;
+  -webkit-user-select: none; }
 
 html, body {
   margin: 0;
@@ -12,7 +13,8 @@ html, body {
   width: 12px;
   height: 12px;
   text-align: center;
-  border-radius: 2px; }
+  border-radius: 2px;
+  overflow: hidden; }
   .close:hover {
     color: #fff;
     background: #d93616;
@@ -77,14 +79,37 @@ html, body {
         color: #444; }
   .tabgroup .close {
     margin: 10px 7px 0;
+    float: right;
     vertical-align: top; }
   .tabgroup .tabs {
     position: relative;
     height: 100%;
     padding: 5px; }
-
-.tabgroup.deleted .tabs {
-  display: none; }
+  .tabgroup .delete-button {
+    display: none; }
+  .tabgroup.deleted {
+    background: none;
+    border: none;
+    box-shadow: none;
+    cursor: auto; }
+    .tabgroup.deleted > div {
+      display: none; }
+    .tabgroup.deleted .delete-button {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      display: block;
+      width: 160px;
+      height: 32px;
+      background: #a0a0a0;
+      border-radius: 5px;
+      transform: translate(-50%, -50%);
+      cursor: pointer; }
+      .tabgroup.deleted .delete-button:hover {
+        background: #919191; }
+      .tabgroup.deleted .delete-button > span {
+        margin-left: 25px;
+        line-height: 32px; }
 
 .tab {
   position: relative;

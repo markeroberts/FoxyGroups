@@ -35,6 +35,19 @@ $tabgroups.dblclick(function(e) {
 	background.openTabGroup(tabGroup.id);
 });
 
+// Close tab group
+$tabgroups.on('click', '.close', function() {
+	$(this).parents('.tabgroup').addClass('deleted');
+});
+$tabgroups.on('click', '.delete-button *:not(.close)', function() {
+	$(this).parents('.tabgroup').removeClass('deleted');
+});
+$tabgroups.on('click', '.delete-button .close', function() {
+	$(this).parents('.tabgroup').fadeOut(300, function() {
+		$(this).remove();
+	});
+});
+
 // Switch to tab on click
 $tabgroups.on('click', '.tab', function() {
 	var $this      = $(this),
@@ -188,9 +201,15 @@ function buildTabGroup(tabGroup) {
 				containment: '#tabgroups'
 			})
 		)
+		.append(
+			$('<div>').addClass('delete-button')
+				.append('<span>Undo close group</span>')
+				.append('<div class="close" title="Discard closed group"><span>&times;</span></div>')
+		)
 		.appendTo($tabgroups)
 		.draggable({
-			containment: '#tabgroups'
+			containment: '#tabgroups',
+			cancel: '.deleted, .delete-button'
 		})
 		.resizable({
 			handles: 'se'
