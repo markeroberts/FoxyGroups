@@ -81,23 +81,27 @@ $tabgroups.on('resizestop', '.tabgroup', function(e, ui) {
 	background.getTabGroup(ui.element.attr('id')).size = ui.size;
 });
 
-// Ensure tab sorting placeholder is same size as tabs to misalignment
-$tabgroups.on('sortstart', '.tabs', function(e, ui) {
-	ui.placeholder.width(ui.placeholder.siblings('.tab')[0].getBoundingClientRect().width);
-	ui.placeholder.height(ui.placeholder.siblings('.tab')[0].getBoundingClientRect().height);
-});
-// Restore tab width after sorting and remove other inline styles
-$tabgroups.on('sortstop', '.tabs', function(e, ui) {
-	var width = ui.item[0].style.width;
-	ui.item.removeAttr('style').css('width', width);
-});
-// Move tabs in group when sorted
-$tabgroups.on('sortupdate', '.tabs', function(e, ui) {
-	var tabGroupId = parseInt(ui.item.parents('.tabgroup').attr('id')),
-		tabId      = parseInt(ui.item.attr('id')),
-		tabIndex   = ui.item.index();
-	background.moveTab(tabGroupId, tabId, tabIndex);
-});
+// Sort tab groups
+$tabgroups.on({
+	// Ensure placeholder is same size as target tabs
+	sortover: function(e, ui) {
+		ui.placeholder.width(ui.placeholder.siblings('.tab')[0].getBoundingClientRect().width);
+		ui.placeholder.height(ui.placeholder.siblings('.tab')[0].getBoundingClientRect().height);
+	},
+	// Restore tab width after sorting and remove other inline styles
+	sortstop: function(e, ui) {
+		var width = ui.item[0].style.width;
+		ui.item.removeAttr('style').css('width', width);
+		sizeTabsInGroup(ui.item.parents('.tabgroup'));
+	},
+	// Change tab order in group when sorted
+	sortupdate: function(e, ui) {
+		var tabGroupId = parseInt(ui.item.parents('.tabgroup').attr('id')),
+			tabId      = parseInt(ui.item.attr('id')),
+			tabIndex   = ui.item.index();
+		background.moveTab(tabGroupId, tabId, tabIndex);
+	}
+}, '.tabs')
 
 // Rename tab groups
 $tabgroups.on({
