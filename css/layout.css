@@ -41,7 +41,8 @@ html, body {
   box-shadow: 2px 2px 10px #444;
   cursor: pointer; }
   .tabgroup.ui-draggable-dragging {
-    cursor: move; }
+    cursor: move;
+    z-index: 91; }
   .tabgroup .name {
     display: inline-block;
     width: calc(100% - 26px);
